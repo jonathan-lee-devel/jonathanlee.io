@@ -1,2 +1,2 @@
 # jonathanlee.io
-My personal website - http://jonathanlee.io
+My personal website - https://jonathanlee.io
