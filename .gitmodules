@@ -1,3 +1,6 @@
 [submodule "jonathanlee.io-static"]
 	path = jonathanlee.io-static
 	url = https://github.com/jonathan-lee-devel/jonathanlee.io-static
+[submodule "contact-node"]
+	path = contact-node
+	url = https://github.com/jonathan-lee-devel/contact-node.git
