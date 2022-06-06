@@ -1,11 +1,21 @@
 version: '3.8'
 
 services:
-  client:
+  contact-node:
+    image: jonathanleedev/contact-node:latest
+    environment:
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      TARGET_EMAIL: ${TARGET_EMAIL}
+      DATABASE_URL: ${DATABASE_URL}
+
+  nginx:
     image: jonathanleedev/jonathanlee.io:latest
     ports:
       - '443:443'
       - '80:80'
+    links:
+      - contact-node
     volumes:
       - ${SERVER_CERT_PATH}:/etc/nginx/server.crt
       - ${SERVER_KEY_PATH}:/etc/nginx/server.key
