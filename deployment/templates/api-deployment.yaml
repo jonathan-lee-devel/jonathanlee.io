@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "jonathanlee-io.fullname" . }}-api-deployment
+  namespace: jonathanlee-io-{{ .Values.environment.name }}
+  labels:
+    app: {{ template "jonathanlee-io.fullname" . }}
+    chart: {{ template "jonathanlee-io.chart" . }}
+    component: "{{ .Values.api.fullname }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "jonathanlee-io.fullname" . }}
+      component: "{{ .Values.api.name }}"
+      release: {{ .Release.Name }}
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "jonathanlee-io.fullname" . }}
+        component: "{{ .Values.api.name }}"
+        release: {{ .Release.Name }}
+    spec:
+      securityContext:
+        runAsUser: 1000
+      containers:
+      - name: {{ template "jonathanlee-io.fullname" . }}-api
+        image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
+        imagePullPolicy: "{{ .Values.api.image.pullPolicy }}"
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: jonathanlee-io-database-url
+                key: DATABASE_URL
+          - name: EMAIL_USER
+            valueFrom:
+              secretKeyRef:
+                name: jonathanlee-io-email-user
+                key: EMAIL_USER
+          - name: EMAIL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: jonathanlee-io-email-password
+                key: EMAIL_PASSWORD
+          - name: TARGET_EMAIL
+            valueFrom:
+              secretKeyRef:
+                name: jonathanlee-io-target-email
+                key: TARGET_EMAIL
+        ports:
+        - containerPort: 8080
+        resources: {}
+        livenessProbe:
+          httpGet:
+            port: 8080
+            path: /
+          initialDelaySeconds: 3
+          periodSeconds: 3
+      restartPolicy: Always
+status: {}

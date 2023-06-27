@@ -1,0 +1,22 @@
+applicationName: sparrow-express
+replicaCount: 1
+
+environment:
+  name: staging
+  hostPrefix: staging.
+
+ui:
+  name: ui
+  image:
+    repository: jonathanleedev/jonathanlee.io
+    tag: stage
+    pullPolicy: Always
+  port: 80
+
+api:
+  name: api
+  image:
+    repository: jonathanleedev/contact-node
+    tag: latest
+    pullPolicy: Always
+  port: 8080

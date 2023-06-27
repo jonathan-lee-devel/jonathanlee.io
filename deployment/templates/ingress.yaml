@@ -1,0 +1,30 @@
+{{- if or (eq .Values.environment.name "staging") (eq .Values.environment.name "production") -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jonathanlee-io-{{ .Values.environment.name }}-ingress
+  namespace: jonathanlee-io-{{ .Values.environment.name }}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.environment.hostPrefix }}jonathanlee.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.applicationName }}-ui-service
+                port:
+                  number: 80
+          - path: /submit_contact
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.applicationName }}-api-service
+                port:
+                  number: 8080
+
+{{- end -}}
