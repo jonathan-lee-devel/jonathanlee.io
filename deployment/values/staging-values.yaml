@@ -9,7 +9,7 @@ ui:
   name: ui
   image:
     repository: jonathanleedev/jonathanlee.io
-    tag: stage
+    tag: latest
     pullPolicy: Always
   port: 80
 
